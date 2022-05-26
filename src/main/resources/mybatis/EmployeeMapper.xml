@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.test.dao.EmployeeDao">
+
+    <select id="list" parameterType="java.util.Map" resultType="com.test.domain.Employee">
+        select
+        `id`,`name`,`birth_day`,`sex`,`depart_name`
+        from employee
+        <where>
+            <if test="name != null and name != ''"> name LIKE concat('%', #{name}, '%') </if>
+        </where>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="Integer">
+        select
+        	count(*)
+        from employee
+        <where>
+            <if test="name != null and name != ''"> name = #{name} </if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.test.domain.Employee" useGeneratedKeys="true" keyProperty="id">
+		insert into employee (`name`,`birth_day`, `sex`, `depart_name`)
+		 values(#{name}, #{birthDay}, #{sex}, #{departName})
+	</insert>
+
+    <update id="update" parameterType="com.test.domain.Employee">
+        update employee
+        <set>
+            <if test="name != null and name != ''"> name = #{name},</if>
+            <if test="birthDay != null and birthDay != ''">birth_day = #{birthDay},</if>
+            <if test="sex != null and sex != ''">sex = #{sex},</if>
+            <if test="departName != null and departName != ''">depart_name = #{departName}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+		delete from employee where id = #{id}
+	</delete>
+
+    <delete id="batchRemove">
+       delete from employee where id in
+       <foreach collection="ids" open="(" separator="," close=")" item="item">
+          #{item}
+       </foreach>
+    </delete>
+
+</mapper>
