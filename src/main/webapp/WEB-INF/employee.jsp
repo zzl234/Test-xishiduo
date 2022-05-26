@@ -113,7 +113,7 @@ function ins() {
 function open_upd(row) {
     console.log(row);
 	if(row==null) {
-		row = $("#grid").datagrid("getSelected");
+		row = $("#grid").datagrid("getChecked");
         console.log(row);
 		if(row==null) {alert("请先点击选择行!"); return;}
 		console.log(row.length)
